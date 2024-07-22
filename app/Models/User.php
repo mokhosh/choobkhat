@@ -53,7 +53,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Project::class);
     }
 
-
     public function sessions(): HasMany
     {
         return $this->hasMany(Session::class);
