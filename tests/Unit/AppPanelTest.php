@@ -2,6 +2,6 @@
 
 use Filament\Facades\Filament;
 
-test('that true is true', function () {
+test('there is an app panel', function () {
     expect(Filament::getPanel('app'))->not->toBeNull();
 });
