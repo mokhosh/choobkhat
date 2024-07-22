@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Session;
+use App\Models\States\Session\Finished;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,7 @@ Artisan::command('import', function () {
             'end' => $invobookSession->end,
             'project_id' => null,
             'notes' => $invobookSession->description,
+            'state' => Finished::class,
         ]);
     });
 
