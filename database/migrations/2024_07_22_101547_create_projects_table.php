@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('notes')->nullable();
+            $table->boolean('default')->default(false);
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
