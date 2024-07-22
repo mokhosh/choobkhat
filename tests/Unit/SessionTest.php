@@ -1,11 +1,12 @@
 <?php
 
+use App\Models\Session;
 use App\Models\User;
 
 it('has attributes', function () {
-    $session = Session::factory()->create();
+    Session::factory()->create();
 
-    expect($session)
+    expect(Session::find(1))
         ->user->toBeInstanceOf(User::class)
         ->start->not->toBeNull()
         ->end->not->toBeNull()
