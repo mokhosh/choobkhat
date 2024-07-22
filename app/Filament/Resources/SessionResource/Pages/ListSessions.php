@@ -19,6 +19,7 @@ class ListSessions extends ListRecords
             ->action(function () {
                 return auth()->user()->sessions()->create([
                     'start' => now(),
+                    'project_id' => Project::query()->latest('updated_at')->where('default', true)->first()?->getKey(),
                 ]);
             });
     }
