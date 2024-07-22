@@ -71,7 +71,8 @@ class SessionResource extends Resource
                     ->action(function (Session $session) {
                         $session->finish();
                     }),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->visible(fn ($livewire) => is_a($livewire, Pages\ListSessions::class)),
+                Tables\Actions\DeleteAction::make()->visible(fn ($livewire) => is_a($livewire, Pages\ListSessions::class)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
