@@ -13,6 +13,7 @@ return new class extends Migration
             $table->timestamp('start');
             $table->timestamp('end')->nullable();
             $table->foreignId('user_id')->constrained('users');
+            $table->string('state');
             $table->timestamps();
         });
     }

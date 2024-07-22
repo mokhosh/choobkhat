@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Session;
+use App\Models\States\Session\Ongoing;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -21,4 +22,11 @@ it('belongs to tasks', function () {
 
     expect(Session::query()->find(1))
         ->tasks->toBeInstanceOf(Collection::class);
+});
+
+it('has ongoing status by default', function () {
+    Session::factory()->create();
+
+    expect(Session::query()->find(1))
+        ->state->toBeInstanceOf(Ongoing::class);
 });
