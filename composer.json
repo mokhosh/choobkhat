@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.9",
         "mokhosh/filament-jalali": "^3.3",
         "ryangjchandler/blade-tabler-icons": "^2.3",
-        "spatie/laravel-model-states": "^2.7"
+        "spatie/laravel-model-states": "^2.7",
+        "spatie/laravel-tags": "^4.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
