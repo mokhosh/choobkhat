@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 use Spatie\ModelStates\HasStates;
 
 /**
@@ -26,6 +27,12 @@ class Session extends Model
         'end' => 'datetime',
         'state' => SessionState::class,
     ];
+
+    public static function getStateOptionsArray(): Collection
+    {
+        return self::getStatesFor('state')
+            ->mapWithKeys(fn ($state) => [$state => str($state)->afterLast('\\')]);
+    }
 
     public function user(): BelongsTo
     {

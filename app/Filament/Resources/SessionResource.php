@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SessionResource\Pages;
 use App\Models\Session;
 use App\Models\States\Session\SessionState;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -20,7 +21,11 @@ class SessionResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\DateTimePicker::make('start')
+                    ->required(),
+                Forms\Components\DateTimePicker::make('end'),
+                Forms\Components\Select::make('state')
+                    ->options(Session::getStateOptionsArray()),
             ]);
     }
 
