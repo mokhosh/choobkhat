@@ -6,6 +6,7 @@ use App\Models\Session;
 use Ariaieboy\Jalali\Jalali;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Str;
 
 class SessionOverview extends BaseWidget
 {
@@ -15,10 +16,15 @@ class SessionOverview extends BaseWidget
     {
         $start = Jalali::now()->getFirstDayOfMonth()->toCarbon()->startOfDay();
         $end = now();
+        $label = sprintf(
+            'Working Hours Past %s %s',
+            $today = Jalali::now()->getDay(),
+            Str::plural('Day', $today),
+        );
 
         return [
             Stat::make(
-                label: 'Monthly Time',
+                label: $label,
                 value: Session::query()
                     ->whereBetween('start', [$start, $end])
                     ->get()
