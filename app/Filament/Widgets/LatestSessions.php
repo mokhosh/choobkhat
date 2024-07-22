@@ -17,6 +17,7 @@ class LatestSessions extends BaseWidget
     public function table(Table $table): Table
     {
         return SessionResource::table($table)
+            ->poll('1s')
             ->query(auth()->user()->sessions()->getQuery()->take(5))
             ->paginated(false)
             ->headerActions([
