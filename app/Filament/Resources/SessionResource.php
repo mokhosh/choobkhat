@@ -95,7 +95,6 @@ class SessionResource extends Resource
     {
         return [
             'index' => Pages\ListSessions::route('/'),
-            'create' => Pages\CreateSession::route('/create'),
             'edit' => Pages\EditSession::route('/{record}/edit'),
         ];
     }
