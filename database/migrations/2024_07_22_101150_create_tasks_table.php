@@ -10,6 +10,9 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->text('notes')->nullable();
+            $table->foreignId('project_id')->constrained();
             $table->timestamps();
         });
 
