@@ -8,7 +8,7 @@ use Spatie\ModelStates\StateConfig;
 
 abstract class SessionState extends State implements HasColor
 {
-    abstract public function getColor(): string | array | null;
+    abstract public function getColor(): string|array|null;
 
     public static function config(): StateConfig
     {
