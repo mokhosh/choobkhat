@@ -50,8 +50,11 @@ class SessionResource extends Resource
         return $table
             ->defaultSort('start', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('start'),
-                Tables\Columns\TextColumn::make('end'),
+                Tables\Columns\TextColumn::make('date')
+                    ->getStateUsing(fn (Session $record): string => $record->start)
+                    ->jalaliDate(),
+                Tables\Columns\TextColumn::make('start')->time(),
+                Tables\Columns\TextColumn::make('end')->time(),
                 Tables\Columns\TextColumn::make('duration'),
                 Tables\Columns\TextColumn::make('project.title'),
                 Tables\Columns\TextColumn::make('notes'),
