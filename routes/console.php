@@ -5,7 +5,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
-Artisan::command('inspire', function () {
+Artisan::command('import', function () {
     config()->set('database.connections.mysql.database', 'invobook');
 
     $invobookSessions = DB::connection('mysql')
@@ -32,4 +32,4 @@ Artisan::command('inspire', function () {
     });
 
     $this->info('Successfully imported Invobook sessions!');
-})->purpose('Display an inspiring quote')->hourly();
+})->purpose('Import sessions from Invobook.');
