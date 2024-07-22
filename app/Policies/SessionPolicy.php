@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Session;
+use App\Models\States\Session\Ongoing;
 use App\Models\User;
 
 class SessionPolicy
@@ -24,11 +25,17 @@ class SessionPolicy
 
     public function update(User $user, Session $session): bool
     {
-        //
+        return $user->getKey() === $session->user_id;
     }
 
     public function delete(User $user, Session $session): bool
     {
-        //
+        return $user->getKey() === $session->user_id;
+    }
+
+    public function finish(User $user, Session $session): bool
+    {
+        return $user->getKey() === $session->user_id &&
+            $session->state->equals(Ongoing::class);
     }
 }

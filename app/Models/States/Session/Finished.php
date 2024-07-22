@@ -8,6 +8,6 @@ class Finished extends SessionState implements HasColor
 {
     public function getColor(): string|array|null
     {
-        return 'green';
+        return 'success';
     }
 }

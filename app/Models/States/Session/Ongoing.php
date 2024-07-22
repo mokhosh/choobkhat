@@ -8,6 +8,6 @@ class Ongoing extends SessionState implements HasColor
 {
     public function getColor(): string|array|null
     {
-        return 'orange';
+        return 'primary';
     }
 }

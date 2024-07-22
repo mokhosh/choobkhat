@@ -10,10 +10,15 @@ abstract class SessionState extends State implements HasColor
 {
     abstract public function getColor(): string|array|null;
 
+    public function getTitle(): string
+    {
+        return str(static::class)->afterLast('\\');
+    }
+
     public static function config(): StateConfig
     {
         return parent::config()
             ->default(Ongoing::class)
-            ->allowTransition(Ongoing::class, Finished::class);
+            ->allowTransition(Ongoing::class, Finished::class, OngoingToFinished::class);
     }
 }

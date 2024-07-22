@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\States\Session\Finished;
 use App\Models\States\Session\SessionState;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\ModelStates\HasStates;
 
+/**
+ * @property SessionState $state
+ */
 class Session extends Model
 {
     use HasFactory;
@@ -38,5 +42,10 @@ class Session extends Model
         return new Attribute(
             get: fn () => $this->end?->diff($this->start),
         );
+    }
+
+    public function finish()
+    {
+        $this->state->transitionTo(Finished::class);
     }
 }
