@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SessionResource\Pages;
+use App\Models\Project;
 use App\Models\Session;
 use App\Models\States\Session\SessionState;
 use Filament\Forms;
@@ -31,6 +32,14 @@ class SessionResource extends Resource
                     ->createOptionForm([Forms\Components\TextInput::make('title')])
                     ->createOptionUsing(function (array $data): int {
                         return auth()->user()->projects()->create($data)->getKey();
+                    }),
+                Forms\Components\Select::make('tasks')
+                    ->relationship('tasks', 'title')
+                    ->multiple()
+                    ->createOptionForm([Forms\Components\TextInput::make('title')])
+                    ->createOptionUsing(function (array $data, Forms\Get $get): int {
+                        // todo find a way to hide create action if no project is selected
+                        return Project::find($get('project_id'))->tasks()->create($data)->getKey();
                     }),
                 Forms\Components\Textarea::make('notes'),
             ]);

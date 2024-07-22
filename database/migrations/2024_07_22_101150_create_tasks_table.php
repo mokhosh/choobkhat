@@ -17,7 +17,7 @@ return new class extends Migration
         });
 
         Schema::create('session_task', function (Blueprint $table) {
-            $table->foreignId('session_id')->constrained();
+            $table->foreignId('session_id')->constrained('work_sessions');
             $table->foreignId('task_id')->constrained();
         });
     }
