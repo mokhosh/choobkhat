@@ -9,6 +9,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class SessionOverview extends BaseWidget
 {
+    protected static ?string $pollingInterval = '1s';
+
     public function getStats(): array
     {
         $start = Jalali::now()->getFirstDayOfMonth()->toCarbon()->startOfDay();
