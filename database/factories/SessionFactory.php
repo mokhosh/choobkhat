@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,6 +22,7 @@ class SessionFactory extends Factory
             'start' => fake()->dateTimeBetween(now()->subDay(), now()),
             'end' => fake()->dateTimeBetween(now()->subHour(), now()),
             'user_id' => User::factory(),
+            'project_id' => Project::factory(),
         ];
     }
 }

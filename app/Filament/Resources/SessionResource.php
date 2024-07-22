@@ -26,16 +26,26 @@ class SessionResource extends Resource
                 Forms\Components\DateTimePicker::make('end'),
                 Forms\Components\Select::make('state')
                     ->options(Session::getStateOptionsArray()),
+                Forms\Components\Select::make('project_id')
+                    ->relationship('project', 'title')
+                    ->createOptionForm([Forms\Components\TextInput::make('title')])
+                    ->createOptionUsing(function (array $data): int {
+                        return auth()->user()->projects()->create($data)->getKey();
+                    }),
+                Forms\Components\Textarea::make('notes'),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('start', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('start'),
                 Tables\Columns\TextColumn::make('end'),
                 Tables\Columns\TextColumn::make('duration'),
+                Tables\Columns\TextColumn::make('project.title'),
+                Tables\Columns\TextColumn::make('notes'),
                 Tables\Columns\TextColumn::make('state')
                     ->formatStateUsing(fn (SessionState $state) => $state->getTitle())
                     ->color(fn (SessionState $state) => $state->getColor())

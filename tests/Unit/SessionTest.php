@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Project;
 use App\Models\Session;
 use App\Models\States\Session\Ongoing;
 use App\Models\Task;
@@ -11,6 +12,7 @@ it('has attributes', function () {
 
     expect(Session::query()->find(1))
         ->user->toBeInstanceOf(User::class)
+        ->project->toBeInstanceOf(Project::class)
         ->start->not->toBeNull()
         ->end->not->toBeNull()
         ->duration->not->toBeNull();
