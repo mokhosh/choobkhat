@@ -79,7 +79,7 @@ class SessionResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->visible(fn ($livewire) => is_a($livewire, Pages\ListSessions::class)),
                 ]),
             ]);
     }
