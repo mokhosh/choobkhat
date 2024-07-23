@@ -12,6 +12,15 @@ class SessionOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = '1s';
 
+    protected int|string|array $columnSpan = 1;
+
+    protected static ?int $sort = -5;
+
+    protected function getColumns(): int
+    {
+        return 1;
+    }
+
     public function getStats(): array
     {
         $start = Jalali::now()->getFirstDayOfMonth()->toCarbon()->startOfDay();
