@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Session;
 use Ariaieboy\Jalali\Jalali;
+use Filament\Support\Colors\Color;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Str;
@@ -23,8 +24,6 @@ class SessionOverview extends BaseWidget
 
     public function getStats(): array
     {
-        $start = Jalali::now()->getFirstDayOfMonth()->toCarbon()->startOfDay();
-        $end = now();
         $label = sprintf(
             'Working Hours Past %s %s',
             $today = Jalali::now()->getDay(),
@@ -34,18 +33,11 @@ class SessionOverview extends BaseWidget
         return [
             Stat::make(
                 label: $label,
-                value: Session::query()
-                    ->whereBetween('start', [$start, $end])
-                    ->get()
-                    ->reduce(
-                        function ($carry, Session $record) {
-                            if ($carry) {
-                                return $record->duration->add($carry);
-                            }
-
-                            return $record->duration;
-                        }
-                    ),
+                value: Session::getWorkingHoursSummary(),
+            )->chart(
+                chart: Session::getWorkingHoursChart(),
+            )->chartColor(
+                Session::isOngoing() ? Color::Red : Color::Green,
             ),
         ];
     }
