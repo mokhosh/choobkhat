@@ -57,7 +57,7 @@ class Session extends Model
             ->reduce(
                 function ($carry, Session $record) {
                     if ($carry) {
-                        return $record->duration->add($carry);
+                        return $record->duration->add($carry)->cascade();
                     }
 
                     return $record->duration;
