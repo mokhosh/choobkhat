@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Synth\CarbonIntervalSynth;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -25,5 +27,9 @@ class AppServiceProvider extends ServiceProvider
         Model::unguard();
 
         Livewire::propertySynthesizer(CarbonIntervalSynth::class);
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::BODY_END,
+            fn () => view('expiration-behavior-script'),
+        );
     }
 }
