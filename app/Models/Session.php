@@ -46,7 +46,7 @@ class Session extends Model
             ->mapWithKeys(fn ($state) => [$state => str($state)->afterLast('\\')]);
     }
 
-    public static function getWorkingHoursSummary(?Carbon $start = null, ?Carbon $end = null): string
+    public static function getWorkingHoursSummary(?Carbon $start = null, ?Carbon $end = null, ?Project $project = null): string
     {
         CarbonInterval::setCascadeFactors([
             'minute' => [60, 'seconds'],
@@ -58,6 +58,7 @@ class Session extends Model
 
         return self::query()
             ->whereBetween('start', [$start, $end])
+            ->when($project, fn ($query) => $query->where('project_id', $project->getKey()))
             ->get()
             ->reduce(
                 function ($carry, Session $record) {
@@ -70,12 +71,13 @@ class Session extends Model
             );
     }
 
-    public static function getWorkingHoursChart(int $count = 10): array
+    public static function getWorkingHoursChart(int $count = 10, ?Project $project = null): array
     {
-        return Cache::remember('workingHoursChart', now()->addDay(), function () use ($count) {
+        return Cache::remember('workingHoursChart'.$project?->getKey(), now()->addDay(), function () use ($count, $project) {
             return self::query()
                 ->latest('start')
                 ->take($count)
+                ->when($project, fn ($query) => $query->where('project_id', $project->getKey()))
                 ->get()
                 ->pluck('duration')
                 ->map(fn (CarbonInterval $duration) => $duration->totalSeconds)
@@ -83,9 +85,11 @@ class Session extends Model
         });
     }
 
-    public static function isOngoing(): bool
+    public static function isOngoing(?Project $project = null): bool
     {
-        return self::whereState('state', Ongoing::class)->exists();
+        return self::whereState('state', Ongoing::class)
+            ->when($project, fn ($query) => $query->where('project_id', $project->getKey()))
+            ->exists();
     }
 
     public function user(): BelongsTo
