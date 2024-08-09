@@ -48,6 +48,11 @@ class Session extends Model
 
     public static function getWorkingHoursSummary(?Carbon $start = null, ?Carbon $end = null): string
     {
+        CarbonInterval::setCascadeFactors([
+            'minute' => [60, 'seconds'],
+            'hour' => [60, 'minutes'],
+        ]);
+
         $start ??= Jalali::now()->getFirstDayOfMonth()->toCarbon()->startOfDay();
         $end ??= now();
 
