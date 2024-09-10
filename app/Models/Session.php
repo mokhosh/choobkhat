@@ -68,7 +68,7 @@ class Session extends Model
 
                     return $record->duration;
                 }
-            );
+            ) ?? '—';
     }
 
     public static function getWorkingHoursChart(int $count = 10, ?Project $project = null): array
