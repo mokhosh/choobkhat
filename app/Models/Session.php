@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\States\Session\Finished;
 use App\Models\States\Session\Ongoing;
 use App\Models\States\Session\SessionState;
-use Ariaieboy\Jalali\Jalali;
 use Carbon\CarbonInterval;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Morilog\Jalali\Jalalian;
 use Spatie\ModelStates\HasStates;
 
 /**
@@ -53,7 +53,7 @@ class Session extends Model
             'hour' => [60, 'minutes'],
         ]);
 
-        $start ??= Jalali::now()->getFirstDayOfMonth()->toCarbon()->startOfDay();
+        $start ??= Jalalian::now()->getFirstDayOfMonth()->toCarbon()->startOfDay();
         $end ??= now();
 
         return self::query()
