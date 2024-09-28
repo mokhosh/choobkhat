@@ -41,7 +41,7 @@ class SessionOverview extends BaseWidget
             )->chart(
                 chart: Session::getWorkingHoursChart(project: $project),
             )->chartColor(
-                Session::isOngoing(project: $project) ? Color::Red : Color::Green,
+                Session::isOngoing() ? Color::Red : Color::Green,
             ),
         ];
     }
