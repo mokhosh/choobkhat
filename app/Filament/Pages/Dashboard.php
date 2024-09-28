@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Project;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -20,9 +21,14 @@ class Dashboard extends BaseDashboard
                 Section::make()
                     ->schema([
                         Select::make('project')
-                            ->options(Project::all()->pluck('title', 'id')),
+                            ->options(Project::all()->pluck('title', 'id'))
+                            ->searchable(),
+                        DatePicker::make('start')
+                            ->jalali(),
+                        DatePicker::make('end')
+                            ->jalali(),
                     ])
-                    ->columns(2),
+                    ->columns(3),
             ]);
     }
 }
