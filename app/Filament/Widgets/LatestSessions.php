@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use App\Filament\Resources\SessionResource;
 use App\Filament\Resources\SessionResource\Pages\ListSessions;
 use App\Models\Project;
+use App\Models\States\Session\Ongoing;
 use Filament\Tables\Actions;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -30,7 +31,11 @@ class LatestSessions extends BaseWidget
             ->poll('1s')
             ->query(
                 auth()->user()->sessions()->getQuery()->take(5)
-                    ->when($project, fn ($query) => $query->where('project_id', $project->getKey()))
+                    ->when($project, fn ($query) => $query->where(
+                        fn ($q) => $q
+                            ->where('project_id', $project->getKey())
+                            ->orWhere('state', Ongoing::class)
+                    ))
                     ->when($start, fn ($query) => $query->where('start', '>=', $start))
                     ->when($end, fn ($query) => $query->where(
                         fn ($q) => $q
