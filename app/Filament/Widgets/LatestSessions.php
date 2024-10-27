@@ -32,8 +32,11 @@ class LatestSessions extends BaseWidget
                 auth()->user()->sessions()->getQuery()->take(5)
                     ->when($project, fn ($query) => $query->where('project_id', $project->getKey()))
                     ->when($start, fn ($query) => $query->where('start', '>=', $start))
-                    ->when($end, fn ($query) => $query->where('end', '<=', $end))
-                    ->orWhereNull('end')
+                    ->when($end, fn ($query) => $query->where(
+                        fn ($q) => $q
+                            ->where('end', '<=', $end)
+                            ->orWhereNull('end')
+                    ))
             )
             ->paginated(false)
             ->headerActions([
