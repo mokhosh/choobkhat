@@ -7,10 +7,12 @@ use App\Models\Project;
 use App\Models\Session;
 use App\Models\States\Session\SessionState;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class SessionResource extends Resource
 {
@@ -68,7 +70,24 @@ class SessionResource extends Resource
                     ->badge(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('project')
+                    ->relationship('project', 'title'),
+                Tables\Filters\Filter::make('since')
+                    ->form([DatePicker::make('since')->jalali()])
+                    ->query(function (Builder $query, array $data) {
+                        return $query->when(
+                            $data['since'],
+                            fn (Builder $query, $since) => $query->where('start', '>=', $since)
+                        );
+                    }),
+                Tables\Filters\Filter::make('until')
+                    ->form([DatePicker::make('until')->jalali()])
+                    ->query(function (Builder $query, array $data) {
+                        return $query->when(
+                            $data['until'],
+                            fn (Builder $query, $until) => $query->where('end', '<=', $until)
+                        );
+                    }),
             ])
             ->actions([
                 Tables\Actions\Action::make('finish')
