@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Synth\CarbonIntervalSynth;
+use Carbon\CarbonInterval;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Database\Eloquent\Model;
@@ -31,5 +32,10 @@ class AppServiceProvider extends ServiceProvider
             PanelsRenderHook::BODY_END,
             fn () => view('expiration-behavior-script'),
         );
+
+        CarbonInterval::setCascadeFactors([
+            'minute' => [60, 'seconds'],
+            'hour' => [60, 'minutes'],
+        ]);
     }
 }
