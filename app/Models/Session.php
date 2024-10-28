@@ -110,7 +110,9 @@ class Session extends Model
     public function duration(): Attribute
     {
         return new Attribute(
-            get: fn () => $this->start?->diff($this->end),
+            get: fn ($value) => $value
+                ? CarbonInterval::createFromFormat('s', $value)->cascade() // for closed sessions
+                : $this->start->diff($this->end), // for open sessions
         );
     }
 
