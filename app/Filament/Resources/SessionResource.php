@@ -6,11 +6,14 @@ use App\Filament\Resources\SessionResource\Pages;
 use App\Models\Project;
 use App\Models\Session;
 use App\Models\States\Session\SessionState;
+use Carbon\CarbonInterval;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontFamily;
 use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -57,7 +60,14 @@ class SessionResource extends Resource
                     ->jalaliDate(),
                 Tables\Columns\TextColumn::make('start')->time(),
                 Tables\Columns\TextColumn::make('end')->time(),
-                Tables\Columns\TextColumn::make('duration'),
+                Tables\Columns\TextColumn::make('duration')
+                    ->summarize(Sum::make()
+                        ->formatStateUsing(fn ($state) => CarbonInterval::createFromFormat('s', $state)->cascade())
+                        ->label('Total Closed Time')
+                    )
+                    ->fontFamily(FontFamily::Mono)
+                    ->alignEnd()
+                    ->grow(),
                 Tables\Columns\TextColumn::make('project.title')
                     ->searchable()
                     ->toggleable(),
