@@ -57,8 +57,10 @@ class SessionResource extends Resource
                 Tables\Columns\TextColumn::make('end')->time(),
                 Tables\Columns\TextColumn::make('duration'),
                 Tables\Columns\TextColumn::make('project.title')
+                    ->searchable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('notes')
+                    ->searchable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('state')
                     ->formatStateUsing(fn (SessionState $state) => $state->getTitle())
