@@ -89,6 +89,7 @@ class SessionResource extends Resource
                         );
                     }),
             ])
+            ->filtersLayout(Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->actions([
                 Tables\Actions\Action::make('finish')
                     ->icon('heroicon-o-check-circle')
