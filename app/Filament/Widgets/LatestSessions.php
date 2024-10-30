@@ -6,6 +6,7 @@ use App\Filament\Resources\SessionResource;
 use App\Filament\Resources\SessionResource\Pages\ListSessions;
 use App\Models\Project;
 use App\Models\States\Session\Ongoing;
+use Carbon\CarbonInterface;
 use Filament\Tables\Actions;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -23,25 +24,21 @@ class LatestSessions extends BaseWidget
 
     public function table(Table $table): Table
     {
-        $project = $this->filters['project'] ? Project::find($this->filters['project']) : null;
-        $start = $this->filters['start'] ? Carbon::parse($this->filters['start']) : Jalalian::now()->getFirstDayOfMonth()->toCarbon()->startOfDay();
-        $end = $this->filters['end'] ? Carbon::parse($this->filters['end']) : now();
-
         return SessionResource::table($table)
             ->poll('1s')
             ->query(
                 auth()->user()->sessions()->getQuery()->take(5)
-                    ->when($project, fn ($query) => $query->where(
+                    ->when($project = $this->getProject(), fn ($query) => $query->where(
                         fn ($q) => $q
                             ->where('project_id', $project->getKey())
                             ->orWhere('state', Ongoing::class)
                     ))
-                    ->when($start, fn ($query) => $query->where('start', '>=', $start))
-                    ->when($end, fn ($query) => $query->where(
+                    ->where('start', '>=', $this->getStart())
+                    ->where(
                         fn ($q) => $q
-                            ->where('end', '<=', $end)
+                            ->where('end', '<=', $this->getEnd())
                             ->orWhereNull('end')
-                    ))
+                    )
             )
             ->paginated(false)
             ->headerActions([
@@ -49,5 +46,26 @@ class LatestSessions extends BaseWidget
                     ->mountUsing(fn (Table $table) => $table->poll(null)),
                 ListSessions::getCreateSessionNowAction(Actions\Action::class),
             ]);
+    }
+
+    protected function getProject(): ?Project
+    {
+        return $this->filters['project']
+            ? Project::query()->find($this->filters['project'])
+            : null;
+    }
+
+    protected function getStart(): CarbonInterface
+    {
+        return $this->filters['start']
+            ? Carbon::parse($this->filters['start'])->startOfDay()
+            : Jalalian::now()->getFirstDayOfMonth()->toCarbon()->startOfDay();
+    }
+
+    protected function getEnd(): CarbonInterface
+    {
+        return $this->filters['end']
+            ? Carbon::parse($this->filters['end'])->endOfDay()
+            : now();
     }
 }
