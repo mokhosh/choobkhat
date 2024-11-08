@@ -18,7 +18,8 @@ class ListSessions extends ListRecords
         $default = Project::default();
 
         return $base::make('create now')
-            ->label('Create '.$default->title)
+            ->label($default->title.' Session')
+            ->icon('tabler-player-play')
             ->action(fn () => auth()->user()->sessions()->create([
                 'start' => now(),
                 'project_id' => $default->getKey(),
@@ -28,6 +29,8 @@ class ListSessions extends ListRecords
     public static function getCreateSessionAction($base = Actions\Action::class): Actions\Action|Filament\Tables\Actions\Action
     {
         return $base::make('create')
+            ->label('Session')
+            ->icon('tabler-dots')
             ->form([
                 Forms\Components\Select::make('project_id')
                     ->relationship('project', 'title')
