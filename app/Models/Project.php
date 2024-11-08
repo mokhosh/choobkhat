@@ -19,6 +19,11 @@ class Project extends Model
         });
     }
 
+    public static function default(): ?static
+    {
+        return Project::query()->latest('updated_at')->where('default', true)->first();
+    }
+
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);

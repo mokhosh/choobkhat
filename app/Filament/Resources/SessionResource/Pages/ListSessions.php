@@ -15,13 +15,14 @@ class ListSessions extends ListRecords
 
     public static function getCreateSessionNowAction($base = Actions\Action::class): Actions\Action|Filament\Tables\Actions\Action
     {
+        $default = Project::default();
+
         return $base::make('create now')
-            ->action(function () {
-                return auth()->user()->sessions()->create([
-                    'start' => now(),
-                    'project_id' => Project::query()->latest('updated_at')->where('default', true)->first()?->getKey(),
-                ]);
-            });
+            ->label('Create '.$default->title)
+            ->action(fn () => auth()->user()->sessions()->create([
+                'start' => now(),
+                'project_id' => $default->getKey(),
+            ]));
     }
 
     public static function getCreateSessionAction($base = Actions\Action::class): Actions\Action|Filament\Tables\Actions\Action
@@ -55,7 +56,7 @@ class ListSessions extends ListRecords
     {
         return [
             static::getCreateSessionAction(),
-            static::getCreateSessionNowAction(),
+            ...(Project::default() ? [static::getCreateSessionNowAction()] : []),
         ];
     }
 }

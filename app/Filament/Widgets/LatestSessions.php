@@ -44,7 +44,7 @@ class LatestSessions extends BaseWidget
             ->headerActions([
                 ListSessions::getCreateSessionAction(Actions\Action::class)
                     ->mountUsing(fn (Table $table) => $table->poll(null)),
-                ListSessions::getCreateSessionNowAction(Actions\Action::class),
+                ...(Project::default() ? [ListSessions::getCreateSessionNowAction(Actions\Action::class)] : []),
             ]);
     }
 
