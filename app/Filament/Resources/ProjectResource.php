@@ -36,8 +36,7 @@ class ProjectResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('notes'),
-                Tables\Columns\IconColumn::make('default')
-                    ->boolean(),
+                Tables\Columns\ToggleColumn::make('default'),
             ])
             ->filters([
                 //
