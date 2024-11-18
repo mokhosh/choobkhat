@@ -30,8 +30,8 @@ class SessionOverview extends BaseWidget
     public function getStats(): array
     {
         $project = $this->filters['project'] ? Project::find($this->filters['project']) : null;
-        $start = $this->filters['start'] ? Carbon::parse($this->filters['start']) : null;
-        $end = $this->filters['end'] ? Carbon::parse($this->filters['end']) : null;
+        $start = $this->filters['start'] ? Carbon::parse($this->filters['start'])->startOfDay() : null;
+        $end = $this->filters['end'] ? Carbon::parse($this->filters['end'])->endOfDay() : null;
         $label = $this->getLabel($start, $end);
 
         return [
