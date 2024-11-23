@@ -6,14 +6,14 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
-Artisan::command('import', function () {
+Artisan::command('import', function (): void {
     config()->set('database.connections.mysql.database', 'invobook');
 
     $invobookSessions = DB::connection('mysql')
         ->table('work_sessions')
         ->get();
 
-    $invobookSessions->each(function ($invobookSession) {
+    $invobookSessions->each(function ($invobookSession): void {
         $start = new Carbon($invobookSession->start);
         $end = new Carbon($invobookSession->end);
 
