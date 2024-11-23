@@ -19,6 +19,7 @@
         "spatie/laravel-tags": "^4.6"
     },
     "require-dev": {
+        "driftingly/rector-laravel": "^1.2",
         "fakerphp/faker": "^1.23",
         "laravel-lang/common": "^6.4",
         "laravel/pint": "^1.13",
