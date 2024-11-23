@@ -7,7 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
-it('has attributes', function () {
+it('has attributes', function (): void {
     Session::factory()->create();
 
     expect(Session::query()->find(1))
@@ -18,7 +18,7 @@ it('has attributes', function () {
         ->duration->not->toBeNull();
 });
 
-it('belongs to tasks', function () {
+it('belongs to tasks', function (): void {
     $tasks = Task::factory()->create();
     Session::factory()->recycle($tasks)->create();
 
@@ -26,7 +26,7 @@ it('belongs to tasks', function () {
         ->tasks->toBeInstanceOf(Collection::class);
 });
 
-it('has ongoing status by default', function () {
+it('has ongoing status by default', function (): void {
     Session::factory()->create();
 
     expect(Session::query()->find(1))

@@ -3,7 +3,7 @@
 use App\Models\Project;
 use App\Models\User;
 
-it('has attributes', function () {
+it('has attributes', function (): void {
     Project::factory()->create();
 
     expect(Project::query()->find(1))
