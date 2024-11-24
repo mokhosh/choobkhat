@@ -22,12 +22,14 @@ class SessionOverview extends BaseWidget
 
     protected static ?int $sort = -5;
 
+    #[\Override]
     protected function getColumns(): int
     {
         return 1;
     }
 
-    public function getStats(): array
+    #[\Override]
+    protected function getStats(): array
     {
         $project = $this->filters['project'] ? Project::find($this->filters['project']) : null;
         $start = $this->filters['start'] ? Carbon::parse($this->filters['start'])->startOfDay() : null;

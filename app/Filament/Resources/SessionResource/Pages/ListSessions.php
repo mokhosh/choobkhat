@@ -35,31 +35,27 @@ class ListSessions extends ListRecords
                 Forms\Components\Select::make('project_id')
                     ->relationship('project', 'title')
                     ->createOptionForm([Forms\Components\TextInput::make('title')])
-                    ->createOptionUsing(function (array $data): int {
-                        return auth()->user()->projects()->create($data)->getKey();
-                    }),
+                    ->createOptionUsing(fn (array $data): int => auth()->user()->projects()->create($data)->getKey()),
                 Forms\Components\Select::make('tasks')
                     ->relationship('tasks', 'title')
                     ->multiple()
                     ->createOptionForm([Forms\Components\TextInput::make('title')])
-                    ->createOptionUsing(function (array $data, Forms\Get $get): int {
+                    ->createOptionUsing(fn (array $data, Forms\Get $get): int =>
                         // todo find a way to hide create action if no project is selected
-                        return Project::find($get('project_id'))->tasks()->create($data)->getKey();
-                    }),
+                        Project::find($get('project_id'))->tasks()->create($data)->getKey()),
                 Forms\Components\Textarea::make('notes'),
             ])
-            ->action(function (array $data) {
-                return auth()->user()->sessions()->create($data + [
-                    'start' => now(),
-                ]);
-            });
+            ->action(fn (array $data) => auth()->user()->sessions()->create($data + [
+                'start' => now(),
+            ]));
     }
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [
             static::getCreateSessionAction(),
-            ...(Project::default() ? [static::getCreateSessionNowAction()] : []),
+            ...(Project::default() instanceof \App\Models\Project ? [static::getCreateSessionNowAction()] : []),
         ];
     }
 }

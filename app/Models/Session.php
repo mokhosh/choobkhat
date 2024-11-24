@@ -30,12 +30,6 @@ class Session extends Model
 
     protected $table = 'work_sessions';
 
-    protected $casts = [
-        'start' => 'datetime',
-        'end' => 'datetime',
-        'state' => SessionState::class,
-    ];
-
     protected $appends = [
         'duration',
     ];
@@ -57,7 +51,7 @@ class Session extends Model
             ->get()
             ->reduce(
                 function ($carry, Session $record) {
-                    if ($carry) {
+                    if ($carry instanceof \Carbon\CarbonInterval) {
                         return $record->duration->add($carry)->cascade();
                     }
 
@@ -68,16 +62,14 @@ class Session extends Model
 
     public static function getWorkingHoursChart(int $count = 10, ?Project $project = null): array
     {
-        return Cache::remember('workingHoursChart'.$project?->getKey(), now()->addDay(), function () use ($count, $project) {
-            return self::query()
-                ->latest('start')
-                ->take($count)
-                ->when($project, fn ($query) => $query->where('project_id', $project->getKey()))
-                ->get()
-                ->pluck('duration')
-                ->map(fn (CarbonInterval $duration) => $duration->totalSeconds)
-                ->toArray();
-        });
+        return Cache::remember('workingHoursChart'.$project?->getKey(), now()->addDay(), fn () => self::query()
+            ->latest('start')
+            ->take($count)
+            ->when($project, fn ($query) => $query->where('project_id', $project->getKey()))
+            ->get()
+            ->pluck('duration')
+            ->map(fn (CarbonInterval $duration) => $duration->totalSeconds)
+            ->toArray());
     }
 
     public static function isOngoing(?Project $project = null): bool
@@ -114,5 +106,15 @@ class Session extends Model
     public function finish(): void
     {
         $this->state->transitionTo(Finished::class);
+    }
+
+    #[\Override]
+    protected function casts(): array
+    {
+        return [
+            'start' => 'datetime',
+            'end' => 'datetime',
+            'state' => SessionState::class,
+        ];
     }
 }

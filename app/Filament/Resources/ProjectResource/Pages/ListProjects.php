@@ -10,13 +10,12 @@ class ListProjects extends ListRecords
 {
     protected static string $resource = ProjectResource::class;
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()
-                ->using(function ($data) {
-                    return auth()->user()->projects()->create($data);
-                }),
+                ->using(fn ($data) => auth()->user()->projects()->create($data)),
         ];
     }
 }

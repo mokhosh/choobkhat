@@ -9,6 +9,7 @@ class CarbonIntervalSynth extends Synth
 {
     public static string $key = 'interval';
 
+    #[\Override]
     public static function match($target): bool
     {
         return $target instanceof CarbonInterval;
@@ -19,7 +20,7 @@ class CarbonIntervalSynth extends Synth
         return [$target->__toString(), []];
     }
 
-    public function hydrate($value): CarbonInterval
+    public function hydrate(string $value): CarbonInterval
     {
         return CarbonInterval::createFromDateString($value);
     }

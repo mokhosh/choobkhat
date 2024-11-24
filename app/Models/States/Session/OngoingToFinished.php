@@ -8,7 +8,7 @@ use Spatie\ModelStates\Transition;
 class OngoingToFinished extends Transition
 {
     public function __construct(
-        private Session $session,
+        private readonly Session $session,
     ) {}
 
     public function handle(): Session

@@ -11,9 +11,10 @@ class Project extends Model
 {
     use HasFactory;
 
+    #[\Override]
     protected static function booted()
     {
-        static::saved(function ($project) {
+        static::saved(function ($project): void {
             if ($project->default) {
                 static::query()->whereKeyNot($project->id)->update(['default' => false]);
             }

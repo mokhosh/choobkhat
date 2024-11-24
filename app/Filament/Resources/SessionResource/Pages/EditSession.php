@@ -10,6 +10,7 @@ class EditSession extends EditRecord
 {
     protected static string $resource = SessionResource::class;
 
+    #[\Override]
     protected function getHeaderActions(): array
     {
         return [

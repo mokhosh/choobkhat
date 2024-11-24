@@ -12,7 +12,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -40,6 +41,7 @@ class User extends Authenticatable implements FilamentUser
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -58,6 +60,7 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Session::class);
     }
 
+    #[\Override]
     public function canAccessPanel(Panel $panel): bool
     {
         return true;

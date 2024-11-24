@@ -22,6 +22,7 @@ class LatestSessions extends BaseWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    #[\Override]
     public function table(Table $table): Table
     {
         return SessionResource::table($table)
@@ -43,8 +44,8 @@ class LatestSessions extends BaseWidget
             ->paginated(false)
             ->headerActions([
                 ListSessions::getCreateSessionAction(Actions\Action::class)
-                    ->mountUsing(fn (Table $table) => $table->poll(null)),
-                ...(Project::default() ? [ListSessions::getCreateSessionNowAction(Actions\Action::class)] : []),
+                    ->mountUsing(fn (Table $table): \Filament\Tables\Table => $table->poll(null)),
+                ...(Project::default() instanceof \App\Models\Project ? [ListSessions::getCreateSessionNowAction(Actions\Action::class)] : []),
             ]);
     }
 

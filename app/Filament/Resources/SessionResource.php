@@ -23,6 +23,7 @@ class SessionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    #[\Override]
     public static function form(Form $form): Form
     {
         return $form
@@ -35,21 +36,19 @@ class SessionResource extends Resource
                 Forms\Components\Select::make('project_id')
                     ->relationship('project', 'title')
                     ->createOptionForm([Forms\Components\TextInput::make('title')])
-                    ->createOptionUsing(function (array $data): int {
-                        return auth()->user()->projects()->create($data)->getKey();
-                    }),
+                    ->createOptionUsing(fn (array $data): int => auth()->user()->projects()->create($data)->getKey()),
                 Forms\Components\Select::make('tasks')
                     ->relationship('tasks', 'title')
                     ->multiple()
                     ->createOptionForm([Forms\Components\TextInput::make('title')])
-                    ->createOptionUsing(function (array $data, Forms\Get $get): int {
+                    ->createOptionUsing(fn (array $data, Forms\Get $get): int =>
                         // todo find a way to hide create action if no project is selected
-                        return Project::find($get('project_id'))->tasks()->create($data)->getKey();
-                    }),
+                        Project::find($get('project_id'))->tasks()->create($data)->getKey()),
                 Forms\Components\Textarea::make('notes'),
             ]);
     }
 
+    #[\Override]
     public static function table(Table $table): Table
     {
         return $table
@@ -62,7 +61,7 @@ class SessionResource extends Resource
                 Tables\Columns\TextColumn::make('end')->time(),
                 Tables\Columns\TextColumn::make('duration')
                     ->summarize(Sum::make()
-                        ->formatStateUsing(fn ($state) => CarbonInterval::createFromFormat('s', $state)->cascade())
+                        ->formatStateUsing(fn ($state): \Carbon\CarbonInterval => CarbonInterval::createFromFormat('s', $state)->cascade())
                         ->label('Total Closed Time')
                     )
                     ->fontFamily(FontFamily::Mono)
@@ -75,8 +74,8 @@ class SessionResource extends Resource
                     ->searchable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('state')
-                    ->formatStateUsing(fn (SessionState $state) => $state->getTitle())
-                    ->color(fn (SessionState $state) => $state->getColor())
+                    ->formatStateUsing(fn (SessionState $state): string => $state->getTitle())
+                    ->color(fn (SessionState $state): string|array|null => $state->getColor())
                     ->badge(),
             ])
             ->filters([
@@ -84,20 +83,16 @@ class SessionResource extends Resource
                     ->relationship('project', 'title'),
                 Tables\Filters\Filter::make('since')
                     ->form([DatePicker::make('since')->jalali()])
-                    ->query(function (Builder $query, array $data) {
-                        return $query->when(
-                            $data['since'],
-                            fn (Builder $query, $since) => $query->where('start', '>=', $since)
-                        );
-                    }),
+                    ->query(fn (Builder $query, array $data) => $query->when(
+                        $data['since'],
+                        fn (Builder $query, $since) => $query->where('start', '>=', $since)
+                    )),
                 Tables\Filters\Filter::make('until')
                     ->form([DatePicker::make('until')->jalali()])
-                    ->query(function (Builder $query, array $data) {
-                        return $query->when(
-                            $data['until'],
-                            fn (Builder $query, $until) => $query->where('end', '<=', $until)
-                        );
-                    }),
+                    ->query(fn (Builder $query, array $data) => $query->when(
+                        $data['until'],
+                        fn (Builder $query, $until) => $query->where('end', '<=', $until)
+                    )),
             ])
             ->filtersLayout(Tables\Enums\FiltersLayout::AboveContentCollapsible)
             ->actions([
@@ -105,19 +100,20 @@ class SessionResource extends Resource
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->authorize('finish')
-                    ->action(function (Session $session) {
+                    ->action(function (Session $session): void {
                         $session->finish();
                     }),
-                Tables\Actions\EditAction::make()->visible(fn ($livewire) => is_a($livewire, Pages\ListSessions::class)),
-                Tables\Actions\DeleteAction::make()->visible(fn ($livewire) => is_a($livewire, Pages\ListSessions::class)),
+                Tables\Actions\EditAction::make()->visible(fn ($livewire): bool => is_a($livewire, Pages\ListSessions::class)),
+                Tables\Actions\DeleteAction::make()->visible(fn ($livewire): bool => is_a($livewire, Pages\ListSessions::class)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()->visible(fn ($livewire) => is_a($livewire, Pages\ListSessions::class)),
+                    Tables\Actions\DeleteBulkAction::make()->visible(fn ($livewire): bool => is_a($livewire, Pages\ListSessions::class)),
                 ]),
             ]);
     }
 
+    #[\Override]
     public static function getRelations(): array
     {
         return [
@@ -125,6 +121,7 @@ class SessionResource extends Resource
         ];
     }
 
+    #[\Override]
     public static function getPages(): array
     {
         return [

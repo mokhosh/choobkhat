@@ -8,6 +8,7 @@ use Spatie\ModelStates\StateConfig;
 
 abstract class SessionState extends State implements HasColor
 {
+    #[\Override]
     abstract public function getColor(): string|array|null;
 
     public function getTitle(): string
@@ -15,6 +16,7 @@ abstract class SessionState extends State implements HasColor
         return str(static::class)->afterLast('\\');
     }
 
+    #[\Override]
     public static function config(): StateConfig
     {
         return parent::config()
