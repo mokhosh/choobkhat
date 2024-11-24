@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Override;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -41,7 +42,7 @@ class User extends Authenticatable implements FilamentUser
      *
      * @return array<string, string>
      */
-    #[\Override]
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -60,7 +61,7 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Session::class);
     }
 
-    #[\Override]
+    #[Override]
     public function canAccessPanel(Panel $panel): bool
     {
         return true;

@@ -4,18 +4,19 @@ namespace App\Synth;
 
 use Carbon\CarbonInterval;
 use Livewire\Mechanisms\HandleComponents\Synthesizers\Synth;
+use Override;
 
 class CarbonIntervalSynth extends Synth
 {
     public static string $key = 'interval';
 
-    #[\Override]
+    #[Override]
     public static function match($target): bool
     {
         return $target instanceof CarbonInterval;
     }
 
-    public function dehydrate($target): array
+    public function dehydrate(CarbonInterval $target): array
     {
         return [$target->__toString(), []];
     }

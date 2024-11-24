@@ -16,6 +16,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Override;
 
 class SessionResource extends Resource
 {
@@ -23,7 +24,7 @@ class SessionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    #[\Override]
+    #[Override]
     public static function form(Form $form): Form
     {
         return $form
@@ -48,7 +49,7 @@ class SessionResource extends Resource
             ]);
     }
 
-    #[\Override]
+    #[Override]
     public static function table(Table $table): Table
     {
         return $table
@@ -61,7 +62,7 @@ class SessionResource extends Resource
                 Tables\Columns\TextColumn::make('end')->time(),
                 Tables\Columns\TextColumn::make('duration')
                     ->summarize(Sum::make()
-                        ->formatStateUsing(fn ($state): \Carbon\CarbonInterval => CarbonInterval::createFromFormat('s', $state)->cascade())
+                        ->formatStateUsing(fn ($state): CarbonInterval => CarbonInterval::createFromFormat('s', $state)->cascade())
                         ->label('Total Closed Time')
                     )
                     ->fontFamily(FontFamily::Mono)
@@ -113,7 +114,7 @@ class SessionResource extends Resource
             ]);
     }
 
-    #[\Override]
+    #[Override]
     public static function getRelations(): array
     {
         return [
@@ -121,7 +122,7 @@ class SessionResource extends Resource
         ];
     }
 
-    #[\Override]
+    #[Override]
     public static function getPages(): array
     {
         return [

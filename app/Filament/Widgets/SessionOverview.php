@@ -11,6 +11,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Morilog\Jalali\Jalalian;
+use Override;
 
 class SessionOverview extends BaseWidget
 {
@@ -22,13 +23,13 @@ class SessionOverview extends BaseWidget
 
     protected static ?int $sort = -5;
 
-    #[\Override]
+    #[Override]
     protected function getColumns(): int
     {
         return 1;
     }
 
-    #[\Override]
+    #[Override]
     protected function getStats(): array
     {
         $project = $this->filters['project'] ? Project::find($this->filters['project']) : null;

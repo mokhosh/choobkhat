@@ -8,6 +8,7 @@ use Filament;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Pages\ListRecords;
+use Override;
 
 class ListSessions extends ListRecords
 {
@@ -50,12 +51,12 @@ class ListSessions extends ListRecords
             ]));
     }
 
-    #[\Override]
+    #[Override]
     protected function getHeaderActions(): array
     {
         return [
             static::getCreateSessionAction(),
-            ...(Project::default() instanceof \App\Models\Project ? [static::getCreateSessionNowAction()] : []),
+            ...(Project::default() instanceof Project ? [static::getCreateSessionNowAction()] : []),
         ];
     }
 }

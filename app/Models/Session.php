@@ -51,7 +51,7 @@ class Session extends Model
             ->get()
             ->reduce(
                 function ($carry, Session $record) {
-                    if ($carry instanceof \Carbon\CarbonInterval) {
+                    if ($carry instanceof CarbonInterval) {
                         return $record->duration->add($carry)->cascade();
                     }
 
