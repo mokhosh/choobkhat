@@ -1,5 +1,7 @@
 # Choobkhat
 
+Choobkhat is meant to be run on your local machine for your personal time tracking needs.
+
 ## The Tech Stack
 
 - [Laravel](https://laravel.com/).
@@ -13,50 +15,6 @@
 - [Spatie Model States](https://spatie.be/docs/laravel-model-states/v2/01-introduction) For Advanced state support for models.
 - [Spatie Tags](https://spatie.be/docs/laravel-tags/v4/introduction) For tagging.
 
-### Project for:
-
- for your time tracking needs
-
 ## Running Locally
 
-- Requires PHP 4.
-
-run:
-
-```bash
-composer install
-```
-
-next:
-```bash
-npm install
-```
-
-next:
-```bash
-cp .env.example .env
-```
-
-next:
-```php
-php artisan key:generate
-```
-
-next:
-```
-php artisan migrate
-```
-
-next:
-```bash
-npm run dev
-```
-
-### run:
-```php
-php artisan serve
-```
-
-## Deployment
-- todo
-
+- Requires PHP 8.4.
