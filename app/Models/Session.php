@@ -117,4 +117,13 @@ class Session extends Model
             'state' => SessionState::class,
         ];
     }
+
+    public static function durationReducer(?CarbonInterval $carry, Session $record): CarbonInterval
+    {
+        if ($carry instanceof CarbonInterval) {
+            return $record->duration->add($carry)->cascade();
+        }
+
+        return $record->duration;
+    }
 }
