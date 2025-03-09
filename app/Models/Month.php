@@ -29,22 +29,15 @@ class Month extends Model
     {
         return collect($this->months)->map(function ($month, $key) {
             $year = Jalalian::now()->getYear();
-            $startOfYear = new Jalalian($year, 1, 1);
-            $start = new Jalalian($year, $key + 1, 1)->getFirstDayOfMonth();
-            $end = $start->getEndDayOfMonth();
+            $startOfYear = new Jalalian($year, 1, 1)->toCarbon()->startOfDay();
+            $start = new Jalalian($year, $key + 1, 1)->getFirstDayOfMonth()->toCarbon()->startOfDay();
+            $end = new Jalalian($year, $key + 1, 1)->getEndDayOfMonth()->toCarbon()->endOfDay();
+            $project = Project::query()->find(static::$project);
 
             return [
                 'month' => $month,
-                'time' => Session::query()
-                    ->whereBetween('start', [$start->toCarbon()->startOfDay(), $end->toCarbon()->endOfDay()])
-                    ->when(static::$project, fn ($query) => $query->where('project_id', static::$project))
-                    ->get()
-                    ->reduce(Session::durationReducer(...))?->format('%H:%I:%S'),
-                'cumulative' => Session::query()
-                    ->whereBetween('start', [$startOfYear->toCarbon()->startOfDay(), $end->toCarbon()->endOfDay()])
-                    ->when(static::$project, fn ($query) => $query->where('project_id', static::$project))
-                    ->get()
-                    ->reduce(Session::durationReducer(...))?->format('%H:%I:%S'),
+                'time' => Session::getWorkingHoursSummary($start, $end, $project)?->format('%H:%I:%S'),
+                'cumulative' => Session::getWorkingHoursSummary($startOfYear, $end, $project)?->format('%H:%I:%S'),
             ];
         })->toArray();
     }

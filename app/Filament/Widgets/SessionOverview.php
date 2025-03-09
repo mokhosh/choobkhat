@@ -40,7 +40,7 @@ class SessionOverview extends BaseWidget
         return [
             Stat::make(
                 label: $label,
-                value: Session::getWorkingHoursSummary($start, $end, $project),
+                value: Session::getWorkingHoursSummary($start, $end, $project) ?? '—',
             )->chart(
                 chart: Session::getWorkingHoursChart(project: $project),
             )->chartColor(

@@ -5,13 +5,13 @@ namespace App\Models;
 use App\Models\States\Session\Finished;
 use App\Models\States\Session\Ongoing;
 use App\Models\States\Session\SessionState;
+use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Morilog\Jalali\Jalalian;
@@ -40,7 +40,7 @@ class Session extends Model
             ->mapWithKeys(fn ($state) => [$state => str($state)->afterLast('\\')]);
     }
 
-    public static function getWorkingHoursSummary(?Carbon $start = null, ?Carbon $end = null, ?Project $project = null): string
+    public static function getWorkingHoursSummary(?Carbon $start = null, ?Carbon $end = null, ?Project $project = null): ?CarbonInterval
     {
         $start ??= Jalalian::now()->getFirstDayOfMonth()->toCarbon()->startOfDay();
         $end ??= now();
@@ -49,7 +49,7 @@ class Session extends Model
             ->whereBetween('start', [$start, $end])
             ->when($project, fn ($query) => $query->where('project_id', $project->getKey()))
             ->get()
-            ->reduce(static::durationReducer(...)) ?? '—';
+            ->reduce(static::durationReducer(...));
     }
 
     public static function getWorkingHoursChart(int $count = 10, ?Project $project = null): array
