@@ -22,7 +22,7 @@ class SessionResource extends Resource
 {
     protected static ?string $model = Session::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'tabler-stopwatch';
 
     #[Override]
     public static function form(Form $form): Form
