@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
+/**
+ * @property Collection<int, Session> $sessions
+ */
 class Project extends Model
 {
     use HasFactory;
@@ -40,5 +45,12 @@ class Project extends Model
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function sessionsDuration(): Attribute
+    {
+        return Attribute::make(
+            fn () => $this->sessions->reduce(Session::durationReducer(...)),
+        );
     }
 }

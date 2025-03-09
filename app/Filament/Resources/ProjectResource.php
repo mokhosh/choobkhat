@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Models\Project;
+use App\Models\Session;
 use Carbon\CarbonInterval;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -40,13 +41,7 @@ class ProjectResource extends Resource
                 Tables\Columns\TextColumn::make('sessions_count')
                     ->counts('sessions'),
                 Tables\Columns\TextColumn::make('sessions_duration')
-                    ->getStateUsing(fn ($record) => $record->sessions->reduce(function ($carry, $session) {
-                        if ($carry instanceof CarbonInterval) {
-                            return $session->duration->add($carry)->cascade();
-                        }
-
-                        return $session->duration;
-                    })),
+                    ->formatStateUsing(fn ($state) => $state->format('%H+ hours')),
                 Tables\Columns\ToggleColumn::make('default'),
             ])
             ->filters([
