@@ -49,15 +49,7 @@ class Session extends Model
             ->whereBetween('start', [$start, $end])
             ->when($project, fn ($query) => $query->where('project_id', $project->getKey()))
             ->get()
-            ->reduce(
-                function ($carry, Session $record) {
-                    if ($carry instanceof CarbonInterval) {
-                        return $record->duration->add($carry)->cascade();
-                    }
-
-                    return $record->duration;
-                }
-            ) ?? '—';
+            ->reduce(static::durationReducer(...)) ?? '—';
     }
 
     public static function getWorkingHoursChart(int $count = 10, ?Project $project = null): array
