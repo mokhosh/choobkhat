@@ -33,6 +33,7 @@ class YearlyReport extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
+            ->poll('1s')
             ->paginated(false)
             ->query(Month::project($this->project))
             ->heading(Project::find($this->project)?->title ?? 'All Projects')
