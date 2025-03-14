@@ -6,6 +6,7 @@ use App\Synth\CarbonIntervalSynth;
 use Carbon\CarbonInterval;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Support\Facades\FilamentView;
+use Filament\Tables\Table;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
@@ -52,6 +53,8 @@ class AppServiceProvider extends ServiceProvider
             'tables::actions.filter' => 'tabler-filter',
             'tables::actions.toggle-columns' => 'tabler-columns-3',
         ]);
+
+        Table::$defaultDateDisplayFormat = 'Y/m/d';
 
         CarbonInterval::setCascadeFactors([
             'minute' => [60, 'seconds'],
