@@ -13,13 +13,16 @@ class Month extends Model
 
     public static ?string $project = null;
 
+    public static ?int $year = null;
+
     protected array $months = [
         'Farvardin', 'Ordibehesht', 'Khordad', 'Tir', 'Mordad', 'Shahrivar',
         'Mehr', 'Aban', 'Azar', 'Dey', 'Bahman', 'Esfand',
     ];
 
-    public static function project(?string $project): Builder
+    public static function yearly(?string $project, ?int $year = null): Builder
     {
+        static::$year = $year ?? Jalalian::now()->getYear();
         static::$project = $project;
 
         return static::query();
@@ -28,10 +31,9 @@ class Month extends Model
     public function getRows(): array
     {
         return collect($this->months)->map(function ($month, $key) {
-            $year = Jalalian::now()->getYear();
-            $startOfYear = new Jalalian($year, 1, 1)->toCarbon()->startOfDay();
-            $start = new Jalalian($year, $key + 1, 1)->getFirstDayOfMonth()->toCarbon()->startOfDay();
-            $end = new Jalalian($year, $key + 1, 1)->getEndDayOfMonth()->toCarbon()->endOfDay();
+            $startOfYear = new Jalalian(static::$year, 1, 1)->toCarbon()->startOfDay();
+            $start = new Jalalian(static::$year, $key + 1, 1)->getFirstDayOfMonth()->toCarbon()->startOfDay();
+            $end = new Jalalian(static::$year, $key + 1, 1)->getEndDayOfMonth()->toCarbon()->endOfDay();
             $project = Project::query()->find(static::$project);
 
             return [
